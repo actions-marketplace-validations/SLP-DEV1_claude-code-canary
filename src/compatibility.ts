@@ -137,9 +137,12 @@ export function checkCanaryLock(lock: CanaryLock, current: { claudeCode: string;
   if (current.platform !== lock.platform) failures.push(`Platform drift: lock=${lock.platform}, current=${current.platform}`);
   if (current.manifests) {
     for (const expected of lock.suites) {
+      const label = `${expected.component}${expected.componentVersion ? `@${expected.componentVersion}` : ''}`;
       const actual = current.manifests.find((manifest) => manifest.component === expected.component && manifest.componentVersion === expected.componentVersion);
-      if (!actual) failures.push(`Missing compatibility evidence for ${expected.component}${expected.componentVersion ? `@${expected.componentVersion}` : ''}`);
+      if (!actual) failures.push(`Missing compatibility evidence for ${label}`);
       else {
+        if (actual.claudeCode !== lock.claudeCode) failures.push(`Manifest Claude Code drift for ${label}: lock=${lock.claudeCode}, manifest=${actual.claudeCode}`);
+        if (actual.platform !== lock.platform) failures.push(`Manifest platform drift for ${label}: lock=${lock.platform}, manifest=${actual.platform}`);
         if (actual.suiteHash !== expected.suiteHash) failures.push(`Suite drift for ${expected.component}: ${expected.suiteHash} != ${actual.suiteHash}`);
         if (actual.evidenceHash !== expected.evidenceHash) failures.push(`Evidence drift for ${expected.component}: ${expected.evidenceHash} != ${actual.evidenceHash}`);
       }
@@ -149,13 +152,21 @@ export function checkCanaryLock(lock: CanaryLock, current: { claudeCode: string;
 }
 
 export function mergeCompatibilityRegistries(name: string, registries: CompatibilityRegistry[]): CompatibilityRegistry {
-  const byEvidence = new Map<string, CompatibilityManifest>();
-  for (const registry of registries) for (const manifest of registry.manifests) byEvidence.set(manifest.evidenceHash, manifest);
+  const byManifest = new Map<string, CompatibilityManifest>();
+  for (const registry of registries) {
+    for (const manifest of registry.manifests) byManifest.set(sha256Canonical(manifest), manifest);
+  }
   return CompatibilityRegistrySchema.parse({
     schemaVersion: 1,
     name,
     generatedAt: new Date().toISOString(),
-    manifests: [...byEvidence.values()].sort((a, b) => a.component.localeCompare(b.component) || compareVersion(a.claudeCode, b.claudeCode)),
+    manifests: [...byManifest.values()].sort((a, b) =>
+      a.component.localeCompare(b.component) ||
+      (a.componentVersion ?? '').localeCompare(b.componentVersion ?? '') ||
+      a.platform.localeCompare(b.platform) ||
+      compareVersion(a.claudeCode, b.claudeCode) ||
+      sha256Canonical(a).localeCompare(sha256Canonical(b))
+    ),
   });
 }
 

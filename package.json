@@ -1,6 +1,6 @@
 {
   "name": "claude-code-canary",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Deterministic regression testing, release bisection and plugin compatibility matrices for Claude Code",
   "author": "SLP-DEV1",
   "type": "module",
@@ -74,12 +74,12 @@
     "minimatch": "10.2.6",
     "openpgp": "6.3.1",
     "yaml": "2.9.0",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@openpgp/web-stream-tools": "0.3.1",
     "@types/node": "24.13.3",
-    "tsx": "4.23.12",
+    "tsx": "4.23.13",
     "typescript": "5.9.3",
     "vitest": "3.2.7"
   }

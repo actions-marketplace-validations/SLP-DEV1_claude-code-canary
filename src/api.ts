@@ -214,8 +214,78 @@ export type {
   CompatibilityExplanation,
   CompatibilityGraph,
 } from './compatibility.js';
+export {
+  detectCompatibilityArtifactKind,
+  diagnoseCompatibilityArtifact,
+  diagnoseCompatibilityFile,
+  formatCompatibilityDiagnostics,
+} from './compatibility-diagnostics.js';
+export type {
+  CompatibilityArtifactKind,
+  EvidenceDiagnosticSeverity,
+  EvidenceDiagnostic,
+  CompatibilityDiagnosticOptions,
+  CompatibilityDiagnosticResult,
+} from './compatibility-diagnostics.js';
+export {
+  StaticRegistryReleaseSchema,
+  StaticRegistryComponentSchema,
+  StaticRegistryIndexSchema,
+  buildStaticRegistryIndex,
+  renderStaticRegistryHtml,
+  publishCompatibilityRegistry,
+} from './registry-publish.js';
+export type {
+  StaticRegistryRelease,
+  StaticRegistryComponent,
+  StaticRegistryIndex,
+  StaticRegistryPublishOptions,
+  StaticRegistryPublishResult,
+} from './registry-publish.js';
+export {
+  SignedCompatibilityManifestSchema,
+  signCompatibilityManifest,
+  verifySignedCompatibilityManifest,
+  loadSignedCompatibilityManifest,
+  writeSignedCompatibilityManifest,
+} from './manifest-signing.js';
+export type {
+  SignedCompatibilityManifest,
+  SignedCompatibilityVerification,
+} from './manifest-signing.js';
+export {
+  CompatibilityBadgeMetadataSchema,
+  buildCompatibilityBadgeMetadata,
+  renderCompatibilityBadgeSvg,
+  publishCompatibilityBadge,
+} from './compatibility-badge.js';
+export type {
+  CompatibilityBadgeMetadata,
+  CompatibilityBadgeOptions,
+} from './compatibility-badge.js';
+export {
+  RegistryExchangeConflictSchema,
+  exportCompatibilityRegistry,
+  importCompatibilityRegistries,
+} from './registry-exchange.js';
+export type {
+  RegistryExchangeConflict,
+  RegistryImportResult,
+} from './registry-exchange.js';
 export { ScenarioPackSchema, inspectScenarioPack, installScenarioPack } from './packs.js';
 export type { ScenarioPack, InspectedScenarioPack } from './packs.js';
+export {
+  ScenarioPackDiscoverySchema,
+  ScenarioPackCatalogSchema,
+  buildScenarioPackDiscovery,
+  buildScenarioPackCatalog,
+  loadScenarioPackDiscovery,
+} from './pack-discovery.js';
+export type {
+  ScenarioPackDiscovery,
+  ScenarioPackCatalog,
+  ScenarioPackDiscoveryOptions,
+} from './pack-discovery.js';
 
 // v1.6: policy/trust, gateway matrices, isolated MCP fixtures and attestation.
 export { PermissionPolicySchema, evaluatePermissionPolicy } from './policy.js';
